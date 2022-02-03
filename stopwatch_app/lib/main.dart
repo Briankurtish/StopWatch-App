@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -121,9 +122,9 @@ class _HomeAppState extends State<HomeApp> {
               const SizedBox(
                 height: 20.0,
               ),
-              const Center(
+              Center(
                 child: Text(
-                  "00:00:00",
+                  "$digitHours:$digitMinutes:$digitSeconds",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 82.0,
@@ -137,6 +138,34 @@ class _HomeAppState extends State<HomeApp> {
                   color: Color(0xFF323F68),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
+                // now let's add the list builder
+                child: ListView.builder(
+                  itemCount: laps.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${laps[index]}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          Text(
+                            "Lap no${index + 1}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
               const SizedBox(
                 height: 20.0,
@@ -146,12 +175,14 @@ class _HomeAppState extends State<HomeApp> {
                 children: [
                   Expanded(
                     child: RawMaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        (!started) ? start() : stop();
+                      },
                       shape: const StadiumBorder(
                         side: BorderSide(color: Colors.blue),
                       ),
-                      child: const Text(
-                        "Start",
+                      child: Text(
+                        (!started) ? "Start" : "Pause",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -160,7 +191,9 @@ class _HomeAppState extends State<HomeApp> {
                     width: 8.0,
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      addLaps();
+                    },
                     color: Colors.white,
                     icon: Icon(Icons.flag),
                   ),
@@ -169,7 +202,9 @@ class _HomeAppState extends State<HomeApp> {
                   ),
                   Expanded(
                     child: RawMaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        reset();
+                      },
                       fillColor: Colors.blue,
                       shape: const StadiumBorder(
                         side: BorderSide(color: Colors.blue),
